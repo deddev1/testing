@@ -1,6 +1,5 @@
 # Cloudflare Workers + static assets — required so CI `npx wrangler deploy` succeeds.
-# Default deploy: Worker only (e.g. *.workers.dev). No custom domains — avoids
-# "Could not find zone" when the CF account does not own theislecheats.cc.
+# Default deploy: Worker only (e.g. *.workers.dev). Custom domains only under [env.production].
 name = "testing"
 main = "workers/site.js"
 compatibility_date = "2026-09-12"
@@ -10,10 +9,12 @@ directory = "./dist"
 binding = "ASSETS"
 not_found_handling = "404-page"
 html_handling = "drop-trailing-slash"
-# Sitemap/robots must run through the Worker so legacy hosts (.net / www) 301 to
-# theislecheats.cc and Googlebot always gets plain XML via assets.local.
+# Sitemap + robots MUST be asset-first (never Worker-rewritten) so Google can
+# fetch them reliably. HTML still runs through the Worker for host redirects.
 run_worker_first = [
   "/*",
+  "!/sitemap.xml",
+  "!/robots.txt",
   "!/sitemap.css",
   "!/favicon.svg",
   "!/_astro/*",
@@ -22,17 +23,13 @@ run_worker_first = [
   "!/og/*",
 ]
 
-# Production account with theislecheats.cc on Cloudflare:
+# Production: apex only (www.theislecheats.cc has no DNS today).
 #   npx wrangler deploy --env production
 [env.production]
 name = "theisleqrhe"
 
 [[env.production.routes]]
 pattern = "theislecheats.cc"
-custom_domain = true
-
-[[env.production.routes]]
-pattern = "www.theislecheats.cc"
 custom_domain = true
 
 [env.production.assets]
@@ -42,6 +39,8 @@ not_found_handling = "404-page"
 html_handling = "drop-trailing-slash"
 run_worker_first = [
   "/*",
+  "!/sitemap.xml",
+  "!/robots.txt",
   "!/sitemap.css",
   "!/favicon.svg",
   "!/_astro/*",

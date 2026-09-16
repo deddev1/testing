@@ -3,9 +3,9 @@
  * IMPORTANT: Always fetch assets via https://assets.local — never the request
  * hostname — or Cloudflare returns HTTP 522 on custom domains.
  *
- * Sitemap/robots go through the Worker (not asset-only) so:
- * - .net / www always 301 to theislecheats.cc (same host as <loc> URLs)
- * - Googlebot gets plain XML (no stylesheet) with correct Content-Type
+ * /sitemap.xml and /robots.txt are served as static assets (see wrangler.toml
+ * run_worker_first exclusions). Do not route them through this Worker — reading
+ * and rewriting those bodies has caused Google "couldn't fetch" / HTTP 500s.
  */
 const CANONICAL_HOST = 'theislecheats.cc'
 const LEGACY_HOSTS = new Set([
@@ -13,8 +13,6 @@ const LEGACY_HOSTS = new Set([
   'www.theislecheats.net',
   'www.theislecheats.cc',
 ])
-const BOT_UA =
-  /Googlebot|Google-InspectionTool|Googlebot-Image|bingbot|BingPreview|Slurp|DuckDuckBot|YandexBot|Baiduspider|Applebot|facebookexternalhit|Twitterbot|LinkedInBot|SemrushBot|AhrefsBot/i
 
 function needsCanonicalRedirect(url) {
   const host = url.hostname.toLowerCase()
@@ -23,50 +21,6 @@ function needsCanonicalRedirect(url) {
 
 function assetsFetch(env, request, pathname) {
   return env.ASSETS.fetch(new Request(new URL(pathname, 'https://assets.local'), request))
-}
-
-async function serveSitemap(request, env) {
-  const assetResponse = await assetsFetch(env, request, '/sitemap.xml')
-  if (!assetResponse.ok) return assetResponse
-
-  let body = await assetResponse.text()
-  const ua = request.headers.get('user-agent') || ''
-  const wantsStylesheet = !BOT_UA.test(ua)
-
-  // Never ship stylesheet in the static file; inject only for browsers.
-  body = body.replace(/\s*<\?xml-stylesheet[^?]*\?>\s*/g, '\n')
-  if (wantsStylesheet && !body.includes('xml-stylesheet')) {
-    body = body.replace(
-      /^<\?xml version="1\.0" encoding="UTF-8"\?>\s*/,
-      '<?xml version="1.0" encoding="UTF-8"?>\n<?xml-stylesheet type="text/css" href="/sitemap.css"?>\n',
-    )
-  }
-
-  return new Response(body, {
-    status: 200,
-    headers: {
-      'content-type': 'application/xml; charset=utf-8',
-      'cache-control': wantsStylesheet
-        ? 'public, max-age=3600'
-        : 'public, max-age=600, must-revalidate',
-      'x-content-type-options': 'nosniff',
-      'x-robots-tag': 'noarchive',
-    },
-  })
-}
-
-async function serveRobots(request, env) {
-  const assetResponse = await assetsFetch(env, request, '/robots.txt')
-  if (!assetResponse.ok) return assetResponse
-  const body = await assetResponse.text()
-  return new Response(body, {
-    status: 200,
-    headers: {
-      'content-type': 'text/plain; charset=utf-8',
-      'cache-control': 'public, max-age=600, must-revalidate',
-      'x-content-type-options': 'nosniff',
-    },
-  })
 }
 
 function withHtmlCharset(response) {
@@ -102,13 +56,6 @@ export default {
       url.protocol = 'https:'
       url.hostname = CANONICAL_HOST
       return Response.redirect(url.toString(), 301)
-    }
-
-    if (url.pathname === '/sitemap.xml') {
-      return serveSitemap(request, env)
-    }
-    if (url.pathname === '/robots.txt') {
-      return serveRobots(request, env)
     }
 
     const assetResponse = await assetsFetch(env, request, url.pathname + url.search)
