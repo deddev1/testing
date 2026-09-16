@@ -12,7 +12,7 @@ const dataDir = join(root, 'src', 'data')
 const pagesDir = join(root, 'src', 'pages')
 // Must match astro `site`, HTML canonicals, and robots.txt Sitemap host.
 // Google drops every <loc> that is not on the same host as the sitemap URL.
-const SITE = (process.env.SITE_URL || 'https://theislecheats.net').replace(/\/$/, '')
+const SITE = (process.env.SITE_URL || 'https://theislecheats.cc').replace(/\/$/, '')
 const TODAY = new Date().toLocaleDateString('en-CA')
 const HREFLANG = ['en', 'x-default']
 

@@ -3,7 +3,7 @@ import { join, relative } from 'node:path'
 
 const root = join(import.meta.dirname, '..')
 const dist = join(root, 'dist')
-const site = (process.env.SITE_URL || 'https://theislecheats.net').replace(/\/$/, '')
+const site = (process.env.SITE_URL || 'https://theislecheats.cc').replace(/\/$/, '')
 const failures = []
 
 function fail(message) {
@@ -98,7 +98,7 @@ for (const [name, html] of [
   ['product', product],
   ['reviews', reviews],
 ]) {
-  if (!html.includes('"@id":"https://theislecheats.net/#product"')) {
+  if (!html.includes('"@id":"https://theislecheats.cc/#product"')) {
     fail(`${name}: missing shared Product ID`)
   }
 }

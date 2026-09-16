@@ -37,7 +37,7 @@ export const BLOGS: BlogPost[] = [
       {
         heading: 'What you get when you buy',
         body: [
-          'The Isle Cheats is one product for The Isle (Evrima). You are buying a loader + license with live Undetected / Updating status on theislecheats.net — not a random multi-game pack.',
+          'The Isle Cheats is one product for The Isle (Evrima). You are buying a loader + license with live Undetected / Updating status on theislecheats.cc — not a random multi-game pack.',
           'Open the product page, confirm status, then checkout. Delivery is instant on supported builds.',
         ],
       },
@@ -114,7 +114,7 @@ export const BLOGS: BlogPost[] = [
       {
         heading: '1) Buy and confirm status',
         body: [
-          'Open Buy The Isle Cheats on theislecheats.net. If status is Updating, wait. If Undetected, checkout and use only the official delivery link (theisle cheats / isle cheats from this site only).',
+          'Open Buy The Isle Cheats on theislecheats.cc. If status is Updating, wait. If Undetected, checkout and use only the official delivery link (theisle cheats / isle cheats from this site only).',
         ],
       },
       {
@@ -174,7 +174,7 @@ export const BLOGS: BlogPost[] = [
       {
         heading: 'Why this step exists',
         body: [
-          'Cheat loaders are often flagged as generic “trojan” heuristics even when you bought The Isle Cheats from theislecheats.net. That blocks inject. Fix the AV step before you spam the loader.',
+          'Cheat loaders are often flagged as generic “trojan” heuristics even when you bought The Isle Cheats from theislecheats.cc. That blocks inject. Fix the AV step before you spam the loader.',
         ],
       },
       {

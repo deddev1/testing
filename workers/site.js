@@ -4,14 +4,14 @@
  * hostname — or Cloudflare returns HTTP 522 on custom domains.
  *
  * Sitemap/robots go through the Worker (not asset-only) so:
- * - .cc / www always 301 to theislecheats.net (same host as <loc> URLs)
+ * - .net / www always 301 to theislecheats.cc (same host as <loc> URLs)
  * - Googlebot gets plain XML (no stylesheet) with correct Content-Type
  */
-const CANONICAL_HOST = 'theislecheats.net'
+const CANONICAL_HOST = 'theislecheats.cc'
 const LEGACY_HOSTS = new Set([
-  'theislecheats.cc',
-  'www.theislecheats.cc',
+  'theislecheats.net',
   'www.theislecheats.net',
+  'www.theislecheats.cc',
 ])
 const BOT_UA =
   /Googlebot|Google-InspectionTool|Googlebot-Image|bingbot|BingPreview|Slurp|DuckDuckBot|YandexBot|Baiduspider|Applebot|facebookexternalhit|Twitterbot|LinkedInBot|SemrushBot|AhrefsBot/i

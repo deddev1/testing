@@ -41,7 +41,7 @@ function artwork(width, height, eyebrow, title, subtitle) {
       <text x="${width * 0.075}" y="${height * 0.47}" fill="#d9a7ff" font-size="${width * 0.022}" font-family="Arial, sans-serif" font-weight="700" letter-spacing="6">${escapeXml(eyebrow)}</text>
       <text x="${width * 0.075}" y="${height * 0.64}" fill="#ffffff" font-size="${titleSize}" font-family="Arial, sans-serif" font-weight="700">${escapeXml(title)}</text>
       <text x="${width * 0.075}" y="${height * 0.75}" fill="#c9bdd2" font-size="${subtitleSize}" font-family="Arial, sans-serif">${escapeXml(subtitle)}</text>
-      <text x="${width * 0.075}" y="${height * 0.9}" fill="#8e8099" font-size="${width * 0.018}" font-family="Arial, sans-serif">theislecheats.net</text>
+      <text x="${width * 0.075}" y="${height * 0.9}" fill="#8e8099" font-size="${width * 0.018}" font-family="Arial, sans-serif">theislecheats.cc</text>
     </svg>
   `)
 }

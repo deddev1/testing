@@ -1,8 +1,8 @@
 import { ISLE_OG, PAGE_IMAGES } from './images'
 
-export const SITE_URL = 'https://theislecheats.net'
+export const SITE_URL = 'https://theislecheats.cc'
 export const SITE_NAME = 'The Isle Cheats'
-export const SITE_HOST = 'theislecheats.net'
+export const SITE_HOST = 'theislecheats.cc'
 
 /**
  * Sole purpose — used in schema + about copy.

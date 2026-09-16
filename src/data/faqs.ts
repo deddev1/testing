@@ -7,11 +7,11 @@ export type FaqItem = {
 export const SITE_FAQS: FaqItem[] = [
   {
     q: 'What are The Isle Cheats?',
-    a: 'The Isle Cheats are tools for The Isle Evrima on theislecheats.net — mainly Entity ESP, World ESP, wallhack, radar, and HWID spoofer — with live Undetected or Updating status after patches.',
+    a: 'The Isle Cheats are tools for The Isle Evrima on theislecheats.cc — mainly Entity ESP, World ESP, wallhack, radar, and HWID spoofer — with live Undetected or Updating status after patches.',
   },
   {
     q: 'Do you cover other games?',
-    a: 'No. theislecheats.net sells The Isle Cheats only. No filler catalog of unrelated titles.',
+    a: 'No. theislecheats.cc sells The Isle Cheats only. No filler catalog of unrelated titles.',
   },
   {
     q: 'Is aimbot the main feature?',
@@ -19,7 +19,7 @@ export const SITE_FAQS: FaqItem[] = [
   },
   {
     q: 'Are The Isle Cheats undetected against EAC?',
-    a: 'We mark live Undetected or Updating status after The Isle / Easy Anti-Cheat updates. Always check status on theislecheats.net before you inject.',
+    a: 'We mark live Undetected or Updating status after The Isle / Easy Anti-Cheat updates. Always check status on theislecheats.cc before you inject.',
   },
   {
     q: 'What features are included?',

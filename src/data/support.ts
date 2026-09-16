@@ -9,13 +9,13 @@ export type SupportTopic = {
 }
 
 export const SUPPORT_INTRO =
-  'Support for The Isle Cheats buyers on theislecheats.net — load, inject, Undetected status, HWID spoofer, menu setup, and delivery help after you purchase.'
+  'Support for The Isle Cheats buyers on theislecheats.cc — load, inject, Undetected status, HWID spoofer, menu setup, and delivery help after you purchase.'
 
 export const SUPPORT_TOPICS: SupportTopic[] = [
   {
     heading: 'Before you open a support request',
     body: [
-      'Confirm you bought The Isle Cheats from theislecheats.net. We only support this product — not random downloads from elsewhere.',
+      'Confirm you bought The Isle Cheats from theislecheats.cc. We only support this product — not random downloads from elsewhere.',
       'Check live status on the product page. If it says Updating, do not inject. Wait for Undetected.',
       'Have your order email and build name ready. That speeds up help after EAC patches.',
     ],
@@ -47,7 +47,7 @@ export const SUPPORT_TOPICS: SupportTopic[] = [
 export const SUPPORT_FAQS: SupportFaq[] = [
   {
     q: 'How do I contact The Isle Cheats support?',
-    a: 'Open your order on theislecheats.net and use the checkout support channel tied to your purchase. Include a status screenshot (Undetected / Updating) and whether you need load, inject, or HWID spoofer help.',
+    a: 'Open your order on theislecheats.cc and use the checkout support channel tied to your purchase. Include a status screenshot (Undetected / Updating) and whether you need load, inject, or HWID spoofer help.',
   },
   {
     q: 'How to load The Isle Cheats after an Evrima patch?',
@@ -67,6 +67,6 @@ export const SUPPORT_FAQS: SupportFaq[] = [
   },
   {
     q: 'Where is the The Isle Cheats download?',
-    a: 'Delivery is instant after checkout on theislecheats.net. Use only that loader link. Third-party mirrors are unsupported and unsafe.',
+    a: 'Delivery is instant after checkout on theislecheats.cc. Use only that loader link. Third-party mirrors are unsupported and unsafe.',
   },
 ]
