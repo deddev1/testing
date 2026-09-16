@@ -3,8 +3,7 @@ import { join, relative } from 'node:path'
 
 const root = join(import.meta.dirname, '..')
 const dist = join(root, 'dist')
-const site = 'https://theislecheats.net'
-const sitemapSite = (process.env.SITE_URL || 'https://theislecheats.cc').replace(/\/$/, '')
+const site = (process.env.SITE_URL || 'https://theislecheats.net').replace(/\/$/, '')
 const failures = []
 
 function fail(message) {
@@ -18,19 +17,11 @@ function htmlFiles(directory) {
   })
 }
 
-function absolutePageUrl(base, file) {
-  const page = relative(dist, file).replaceAll('\\', '/')
-  if (page === 'index.html') return `${base}/`
-  if (page.endsWith('/index.html')) return `${base}/${page.slice(0, -11)}`
-  return `${base}/${page.slice(0, -5)}`
-}
-
 function pageUrl(file) {
-  return absolutePageUrl(site, file)
-}
-
-function sitemapPageUrl(file) {
-  return absolutePageUrl(sitemapSite, file)
+  const page = relative(dist, file).replaceAll('\\', '/')
+  if (page === 'index.html') return `${site}/`
+  if (page.endsWith('/index.html')) return `${site}/${page.slice(0, -11)}`
+  return `${site}/${page.slice(0, -5)}`
 }
 
 const files = htmlFiles(dist)
@@ -140,7 +131,7 @@ if (/forums\/(instructions|how-to-load)/.test(sitemap)) fail('Retired forum rema
 const builtPages = files.filter(
   (file) => relative(dist, file).replaceAll('\\', '/') !== '404.html',
 )
-const expectedSitemapUrls = new Set(builtPages.map(sitemapPageUrl))
+const expectedUrls = new Set(builtPages.map(pageUrl))
 const urlBlocks = sitemap.match(/<url>[\s\S]*?<\/url>/g) || []
 const pageLocs = urlBlocks.map((block) => block.match(/<loc>([^<]+)<\/loc>/)?.[1]).filter(Boolean)
 const uniqueSitemapUrls = new Set(pageLocs)
@@ -154,17 +145,17 @@ const requiredImages = [
   '/og/default.jpg',
 ]
 
-for (const url of expectedSitemapUrls) {
+for (const url of expectedUrls) {
   if (!uniqueSitemapUrls.has(url)) fail(`sitemap.xml missing built page ${url}`)
 }
 for (const url of uniqueSitemapUrls) {
-  if (!expectedSitemapUrls.has(url)) fail(`sitemap.xml contains URL without a built page: ${url}`)
+  if (!expectedUrls.has(url)) fail(`sitemap.xml contains URL without a built page: ${url}`)
 }
 if (uniqueSitemapUrls.size !== pageLocs.length) fail('sitemap.xml contains duplicate URLs')
-if (urlBlocks.length !== expectedSitemapUrls.size) {
-  fail(`sitemap.xml must contain exactly ${expectedSitemapUrls.size} built page URLs`)
+if (urlBlocks.length !== expectedUrls.size) {
+  fail(`sitemap.xml must contain exactly ${expectedUrls.size} built page URLs`)
 }
-if ((sitemap.match(/<image:image>/g) || []).length < expectedSitemapUrls.size) {
+if ((sitemap.match(/<image:image>/g) || []).length < expectedUrls.size) {
   fail('Every sitemap URL must include at least one image entry')
 }
 for (const block of urlBlocks) {
@@ -202,8 +193,8 @@ if (!existsSync(join(dist, 'robots.txt'))) fail('dist/robots.txt is missing')
 if (!existsSync(join(dist, '_routes.json'))) fail('dist/_routes.json is missing')
 
 const robots = readFileSync(join(dist, 'robots.txt'), 'utf8')
-if (!robots.includes(`Sitemap: ${sitemapSite}/sitemap.xml`)) {
-  fail('robots.txt must point at the HTTPS sitemap URL')
+if (!robots.includes(`Sitemap: ${site}/sitemap.xml`)) {
+  fail('robots.txt must point at the canonical HTTPS sitemap URL')
 }
 if (!robots.includes('Allow: /sitemap.xml')) {
   fail('robots.txt must explicitly allow /sitemap.xml')

@@ -13,4 +13,4 @@ Allow: /
 Allow: /sitemap.xml
 Allow: /robots.txt
 
-Sitemap: https://theislecheats.cc/sitemap.xml
+Sitemap: https://theislecheats.net/sitemap.xml
