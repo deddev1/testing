@@ -1,17 +1,9 @@
 # Cloudflare Workers + static assets — required so CI `npx wrangler deploy` succeeds.
-# (Dashboard is locked to that command; `wrangler pages deploy` is not used.)
-name = "theisleqrhe"
+# Default deploy: Worker only (e.g. *.workers.dev). No custom domains — avoids
+# "Could not find zone" when the CF account does not own theislecheats.net.
+name = "testing"
 main = "workers/site.js"
 compatibility_date = "2026-09-12"
-
-# Recreate DNS/SSL for apex + www (fixes NXDOMAIN / Google HTTP 522).
-[[routes]]
-pattern = "theislecheats.net"
-custom_domain = true
-
-[[routes]]
-pattern = "www.theislecheats.net"
-custom_domain = true
 
 [assets]
 directory = "./dist"
@@ -20,6 +12,36 @@ not_found_handling = "404-page"
 html_handling = "drop-trailing-slash"
 # Host redirects need the Worker, but sitemap/robots must stay asset-first
 # so Google never hits a Worker/origin timeout (HTTP 522).
+run_worker_first = [
+  "/*",
+  "!/sitemap.xml",
+  "!/robots.txt",
+  "!/sitemap.css",
+  "!/favicon.svg",
+  "!/_astro/*",
+  "!/media/*",
+  "!/videos/*",
+  "!/og/*",
+]
+
+# Production account with theislecheats.net on Cloudflare:
+#   npx wrangler deploy --env production
+[env.production]
+name = "theisleqrhe"
+
+[[env.production.routes]]
+pattern = "theislecheats.net"
+custom_domain = true
+
+[[env.production.routes]]
+pattern = "www.theislecheats.net"
+custom_domain = true
+
+[env.production.assets]
+directory = "./dist"
+binding = "ASSETS"
+not_found_handling = "404-page"
+html_handling = "drop-trailing-slash"
 run_worker_first = [
   "/*",
   "!/sitemap.xml",
