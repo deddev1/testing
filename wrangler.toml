@@ -1,5 +1,4 @@
 # Cloudflare Workers + static assets — required so CI `npx wrangler deploy` succeeds.
-# Default deploy: Worker only (e.g. *.workers.dev). Custom domains only under [env.production].
 name = "testing"
 main = "workers/site.js"
 compatibility_date = "2026-09-12"
@@ -9,12 +8,10 @@ directory = "./dist"
 binding = "ASSETS"
 not_found_handling = "404-page"
 html_handling = "drop-trailing-slash"
-# Sitemap + robots MUST be asset-first (never Worker-rewritten) so Google can
-# fetch them reliably. HTML still runs through the Worker for host redirects.
+# Sitemap/robots/txt are handled in Worker code (embedded payload). Do NOT
+# exclude them — exclusions previously caused crawler HTTP 500s on some edges.
 run_worker_first = [
   "/*",
-  "!/sitemap.xml",
-  "!/robots.txt",
   "!/sitemap.css",
   "!/favicon.svg",
   "!/_astro/*",
@@ -23,8 +20,6 @@ run_worker_first = [
   "!/og/*",
 ]
 
-# Production: apex only (www.theislecheats.cc has no DNS today).
-#   npx wrangler deploy --env production
 [env.production]
 name = "theisleqrhe"
 
@@ -39,8 +34,6 @@ not_found_handling = "404-page"
 html_handling = "drop-trailing-slash"
 run_worker_first = [
   "/*",
-  "!/sitemap.xml",
-  "!/robots.txt",
   "!/sitemap.css",
   "!/favicon.svg",
   "!/_astro/*",

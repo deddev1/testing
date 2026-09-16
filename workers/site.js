@@ -1,12 +1,14 @@
 /**
  * Worker entry for Astro static output in ./dist.
- * IMPORTANT: Always fetch assets via https://assets.local — never the request
- * hostname — or Cloudflare returns HTTP 522 on custom domains.
+ * IMPORTANT: Always fetch page assets via https://assets.local — never the
+ * request hostname — or Cloudflare returns HTTP 522 on custom domains.
  *
- * /sitemap.xml and /robots.txt are served as static assets (see wrangler.toml
- * run_worker_first exclusions). Do not route them through this Worker — reading
- * and rewriting those bodies has caused Google "couldn't fetch" / HTTP 500s.
+ * Sitemap + robots are served from an embedded build payload (seo-payload.js)
+ * so Google never depends on Workers Assets edge cases that returned HTTP 500
+ * to some crawlers for /sitemap.xml while browsers still got 200.
  */
+import { ROBOTS_TXT, SITEMAP_TXT, SITEMAP_XML } from './seo-payload.js'
+
 const CANONICAL_HOST = 'theislecheats.cc'
 const LEGACY_HOSTS = new Set([
   'theislecheats.net',
@@ -48,6 +50,17 @@ function withHtmlCharset(response) {
   })
 }
 
+function seoResponse(body, contentType) {
+  return new Response(body, {
+    status: 200,
+    headers: {
+      'content-type': contentType,
+      'cache-control': 'public, max-age=0, must-revalidate',
+      'x-content-type-options': 'nosniff',
+    },
+  })
+}
+
 export default {
   async fetch(request, env) {
     const url = new URL(request.url)
@@ -56,6 +69,16 @@ export default {
       url.protocol = 'https:'
       url.hostname = CANONICAL_HOST
       return Response.redirect(url.toString(), 301)
+    }
+
+    if (url.pathname === '/sitemap.xml') {
+      return seoResponse(SITEMAP_XML, 'application/xml; charset=utf-8')
+    }
+    if (url.pathname === '/sitemap.txt') {
+      return seoResponse(SITEMAP_TXT, 'text/plain; charset=utf-8')
+    }
+    if (url.pathname === '/robots.txt') {
+      return seoResponse(ROBOTS_TXT, 'text/plain; charset=utf-8')
     }
 
     const assetResponse = await assetsFetch(env, request, url.pathname + url.search)

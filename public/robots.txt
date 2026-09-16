@@ -1,16 +1,5 @@
-User-agent: Googlebot
-Allow: /
-Allow: /sitemap.xml
-Allow: /robots.txt
-
-User-agent: Google-InspectionTool
-Allow: /
-Allow: /sitemap.xml
-Allow: /robots.txt
-
 User-agent: *
 Allow: /
-Allow: /sitemap.xml
-Allow: /robots.txt
 
 Sitemap: https://theislecheats.cc/sitemap.xml
+Sitemap: https://theislecheats.cc/sitemap.txt

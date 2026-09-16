@@ -173,7 +173,7 @@ if (!sitemap.trimStart().startsWith('<?xml version="1.0" encoding="UTF-8"?>')) {
   fail('sitemap.xml must start with an XML declaration')
 }
 if (sitemap.includes('xml-stylesheet')) {
-  fail('sitemap.xml must not embed xml-stylesheet (Worker injects it for browsers only)')
+  fail('sitemap.xml must not embed xml-stylesheet')
 }
 for (const stale of [
   'sitemap-pages.xml',
@@ -196,17 +196,26 @@ const robots = readFileSync(join(dist, 'robots.txt'), 'utf8')
 if (!robots.includes(`Sitemap: ${site}/sitemap.xml`)) {
   fail('robots.txt must point at the canonical HTTPS sitemap URL')
 }
-if (!robots.includes('Allow: /sitemap.xml')) {
-  fail('robots.txt must explicitly allow /sitemap.xml')
+if (!robots.includes('User-agent: *')) {
+  fail('robots.txt must include User-agent: *')
 }
-if (!robots.includes('User-agent: Googlebot')) {
-  fail('robots.txt must explicitly allow Googlebot')
+if (robots.includes('Disallow: /')) {
+  fail('robots.txt must not disallow the whole site')
 }
 
 const routes = JSON.parse(readFileSync(join(dist, '_routes.json'), 'utf8'))
 if (!routes.exclude?.includes('/sitemap.xml') || !routes.exclude?.includes('/robots.txt')) {
   fail('_routes.json must exclude /sitemap.xml and /robots.txt from Functions')
 }
+
+const payloadPath = join(root, 'workers', 'seo-payload.js')
+if (!existsSync(payloadPath)) fail('workers/seo-payload.js missing — run generate-sitemaps')
+const payload = readFileSync(payloadPath, 'utf8')
+if (!payload.includes('export const SITEMAP_XML')) fail('seo-payload.js missing SITEMAP_XML')
+if (!payload.includes(site)) fail('seo-payload.js must embed theislecheats.cc URLs')
+if (!existsSync(join(dist, 'sitemap.txt'))) fail('dist/sitemap.txt is missing')
+const sitemapTxt = readFileSync(join(dist, 'sitemap.txt'), 'utf8')
+if (!sitemapTxt.includes(`${site}/`)) fail('sitemap.txt must list canonical page URLs')
 
 for (const asset of [
   'public/og/default.jpg',
